@@ -1,0 +1,36 @@
+version: "3.8"
+
+services:
+  kick-api:
+    container_name: kick-api
+    build:
+      context: .
+      target: dev
+    environment:
+      - DB_HOST=$DB_HOST
+      - POSTGRES_USER=$POSTGRES_USER
+      - POSTGRES_PASSWORD=$POSTGRES_PASSWORD
+      - POSTGRES_DB=$POSTGRES_DB
+    volumes:
+      - ./app:/app:rw,delegated
+    ports:
+      - 8080:8080
+      - 2345:2345
+    depends_on:
+      - postgres-db
+  postgres-db:
+    image: postgres:latest
+    hostname: $DB_HOST
+    restart: always
+    environment:
+      - POSTGRES_USER=$POSTGRES_USER
+      - POSTGRES_PASSWORD=$POSTGRES_PASSWORD
+      - POSTGRES_DB=$POSTGRES_DB
+      - DATABASE_HOST=$DB_HOST
+    ports:
+      - 5432:5432
+    volumes:
+      - db:/var/lib/postgresql/data 
+
+volumes:
+  db:
