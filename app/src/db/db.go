@@ -26,7 +26,26 @@ func Init() *gorm.DB {
 		log.Error(err)
 	}
 
-	db.AutoMigrate(&models.Player{})
+	models := []interface{}{&models.Player{}, &models.ValueEntry{}}
+	db.AutoMigrate(models...)
 
 	return db
+}
+
+func GetAllPlayersWithEntries(db *gorm.DB) ([]models.Player, error) {
+	var players []models.Player
+	err := db.Model(&models.Player{}).Preload("ValueEntries").Find(&players).Error
+	return players, err
+}
+
+func GetEntriesForPlayer(db *gorm.DB, slug string) ([]models.ValueEntry, error) {
+	var currentEntries []models.ValueEntry
+	err := db.Where("player_slug = ?", slug).Find(&currentEntries).Error
+	return currentEntries, err
+}
+
+func GetCurrentEntry(db *gorm.DB, slug string) (models.ValueEntry, error) {
+	var entry models.ValueEntry
+	err := db.Where("player_slug = ?", slug).First(&entry).Error
+	return entry, err
 }

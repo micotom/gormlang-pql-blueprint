@@ -1,7 +1,10 @@
 package models
 
 type Player struct {
-	FirstName string `json:"first_name"`
-	LastName  string `json:"last_name"`
-	Club      string `json:"club"`
+	Slug         string `json:"slug" gorm:"primaryKey"`
+	Name         string `json:"name"`
+	Club         string `json:"club"`
+	Position     string `json:"position"`
+	TotalPoints  int    `json:"total_points"`
+	ValueEntries []ValueEntry
 }
