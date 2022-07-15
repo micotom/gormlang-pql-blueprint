@@ -21,7 +21,8 @@ func main() {
 	r := gin.Default()
 	r.GET("/scrape", h.DoScrape)
 	r.GET("/players", h.GetAllPlayers)
-	r.GET("/players/:slug", h.GetAllEntriesForPlayer)
+	r.GET("/players/:slug/entries", h.GetAllEntriesForPlayer)
 	r.GET("/players/:slug/current", h.GetCurrentEntryForPlayer)
+	r.GET("/players/compare", h.ComparePlayers)
 	r.Run() // listen and serve on 0.0.0.0:8080
 }

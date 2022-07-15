@@ -32,6 +32,18 @@ func Init() *gorm.DB {
 	return db
 }
 
+func GetAllPlayers(db *gorm.DB) ([]models.Player, error) {
+	var ps []models.Player
+	err := db.Find(&ps).Error
+	return ps, err
+}
+
+func GetPlayerBySlug(db *gorm.DB, slug string) (models.Player, error) {
+	var p models.Player
+	err := db.Where("slug = ?", slug).First(&p).Error
+	return p, err
+}
+
 func GetAllPlayersWithEntries(db *gorm.DB) ([]models.Player, error) {
 	var players []models.Player
 	err := db.Model(&models.Player{}).Preload("ValueEntries").Find(&players).Error
@@ -46,6 +58,6 @@ func GetEntriesForPlayer(db *gorm.DB, slug string) ([]models.ValueEntry, error) 
 
 func GetCurrentEntry(db *gorm.DB, slug string) (models.ValueEntry, error) {
 	var entry models.ValueEntry
-	err := db.Where("player_slug = ?", slug).First(&entry).Error
+	err := db.Where("player_slug = ?", slug).Order("Day desc").First(&entry).Error
 	return entry, err
 }

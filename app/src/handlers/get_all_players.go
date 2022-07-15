@@ -3,15 +3,13 @@ package handlers
 import (
 	"net/http"
 
-	"funglejunk.com/kick-api/src/models"
+	"funglejunk.com/kick-api/src/db"
 	"github.com/gin-gonic/gin"
-	log "github.com/sirupsen/logrus"
 )
 
 func (h handler) GetAllPlayers(c *gin.Context) {
-	var players []models.Player
-	if result := h.DB.Find(&players); result.Error != nil {
-		log.Error(result.Error)
+	r1, e1 := db.GetAllPlayers(h.DB)
+	if r, e := CheckResult(c, r1, e1); e == nil {
+		c.JSON(http.StatusOK, r)
 	}
-	c.JSON(http.StatusOK, players)
 }
