@@ -33,7 +33,7 @@ func (h handler) ComparePlayers(c *gin.Context) {
 		for _, n := range names {
 			pResult := ComparisonPlayerResult{}
 			p, _ := db.GetPlayerBySlug(h.DB, n)
-			entry, _ := db.GetCurrentEntry(h.DB, n)
+			entry := p.ValueEntries[0]
 			v := ComparisonValue{
 				Diff: float32(entry.RaiseDiff),
 				Date: entry.Day,
@@ -59,7 +59,7 @@ func (h handler) ComparePlayers(c *gin.Context) {
 		result.Winner = winner
 		result.WinningDiff = highestVal
 
-		c.JSON(http.StatusOK, result)
+		c.HTML(http.StatusOK, "compare.html", result)
 	} else {
 		c.AbortWithStatus(http.StatusBadRequest)
 	}

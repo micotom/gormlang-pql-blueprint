@@ -1,0 +1,15 @@
+<head>
+    <link rel="stylesheet" type="text/css" href="/assets/bulma.min.css">
+</head>
+<div class="box">
+    {{ range $key, $value := . }}
+        <p class="subtitle">{{ $key }}</p>
+        <div class="content">
+        {{ range $value }}
+            <div class="list is-hoverable">
+                <a class="list-item" href="../players/{{ .Slug }}">{{ .Name }}</a>
+            </div>
+        {{ end }}
+        </div>
+    {{ end }}
+</div>

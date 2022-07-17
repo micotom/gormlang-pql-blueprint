@@ -1,0 +1,17 @@
+<p>Winner: {{ .Winner }}</p>
+<p>Diff: {{ .WinningDiff }}</p>
+</br>
+{{ range .PlayerResults }}
+    <table>
+        <tr>
+            <th>Name</th>
+            <th>Date</th>
+            <th>Value</th>
+        </tr>
+        <tr>
+            <td>{{ .PlayerName }}</td>
+            <td>{{ .Value.Date | dateStr }}</td>
+            <td>{{ .Value.Diff }}</td>
+        </tr>
+    </table>
+{{ end }}

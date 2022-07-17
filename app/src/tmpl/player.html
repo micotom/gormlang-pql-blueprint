@@ -1,0 +1,47 @@
+<head>
+    <link rel="stylesheet" type="text/css" href="/assets/bulma.min.css">
+</head>
+<div class="box">
+    <h1 class="title">{{ .Name }}</h1>
+    <p>
+        <h2 class="subtitle">Facts</h2>
+
+        <table class="table">
+            <tr>
+                <th>Club</th>
+                <td>{{ .Club }}</td>
+            </tr>
+            <tr>
+                <th>Position</th>
+                <td>{{ .Position }}</td>
+            </tr>
+            <tr>
+                <th>Total Points</th>
+                <td>{{ .TotalPoints }}</td>
+            </tr>
+            <tr>
+                <th>Trend</th>
+                <td>{{ . | trend }}</td>
+            </tr>
+        </table>
+    </p>
+
+    <h2 class="subtitle">Performance</h2>
+
+    <table class="table is-striped is-narrow"> 
+        <tr>
+            <th>Date</th>
+            <th>Value</th>
+            <th>Raise</th>
+            <th>Perc</th>
+        </tr>
+        {{ range .ValueEntries }}
+                <tr>
+                    <td>{{ .Day | dateStr }}</td>
+                    <td>{{ .Value | moneyStr }}€</td>
+                    <td>{{ .RaiseDiff | moneyStr }}€</td>
+                    <td>{{ .RaisePerc }}%</td>
+                </tr>
+        {{ end }}
+    </table>
+</div>

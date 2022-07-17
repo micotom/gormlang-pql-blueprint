@@ -6,6 +6,7 @@ import (
 	"strconv"
 	"strings"
 	"time"
+	"os"
 
 	"funglejunk.com/kick-api/src/db"
 	"funglejunk.com/kick-api/src/models"
@@ -16,6 +17,10 @@ import (
 
 	log "github.com/sirupsen/logrus"
 )
+
+var scrapeDomain = os.Getenv("SCRAPE_DOMAIN")
+var scrapeLink1 = os.Getenv("SCRAPE_LINK_WINNERS")
+var scrapeLink2 = os.Getenv("SCRAPE_LINK_LOSERS")
 
 var intRegex *regexp.Regexp = regexp.MustCompile("[^-?(?:\\d+)+]")
 var floatRegex *regexp.Regexp = regexp.MustCompile("[^-?(?:\\d+.?)+]")
@@ -51,8 +56,8 @@ func shouldAddEntry(new models.ValueEntry, olds []models.ValueEntry) bool {
 	nY, nM, nD := time.Time(new.Day).Date()
 	for _, entry := range olds {
 		y, m, d := time.Time(entry.Day).Date()
-		add := y != nY && m != nM && d != nD
-		if !add {
+		isDuplicate := y == nY && m == nM && d == nD
+		if isDuplicate {
 			return false
 		}
 	}
@@ -63,7 +68,7 @@ func (h handler) DoScrape(c *gin.Context) {
 	cy := colly.NewCollector()
 
 	cy.Limit(&colly.LimitRule{
-		DomainGlob:  "ligainsider.de/*",
+		DomainGlob:  scrapeDomain,
 		Delay:       1 * time.Second,
 		RandomDelay: 1 * time.Second,
 	})
@@ -96,28 +101,28 @@ func (h handler) DoScrape(c *gin.Context) {
 						}
 					})
 
-					h.DB.FirstOrCreate(p).Preload("ValueEntries")
-					currentEntries, err := db.GetEntriesForPlayer(h.DB, p.Slug)
-
-					if err != nil {
-						panic(err)
+					dbP, e := db.GetOrCreatePlayer(h.DB, *p)
+					if e != nil {
+						panic(e)
 					}
 
-					if shouldAddEntry(*vE, currentEntries) {
-						allEntries := append(p.ValueEntries, *vE)
+					if shouldAddEntry(*vE, dbP.ValueEntries) {
+						allEntries := append(dbP.ValueEntries, *vE)
 						p.ValueEntries = allEntries
-						h.DB.Save(p)
+						if e := db.SavePlayer(h.DB, dbP); e != nil {
+							panic(e)
+						}
 					} else {
-						log.Info("Duplicate day entry - ignore")
+						log.Info("Duplicate")
 					}
 				})
 			})
 		})
 
-	cy.Visit("https://www.ligainsider.de/stats/kickbase/marktwerte/tag/gewinner/")
-	cy.Visit("https://www.ligainsider.de/stats/kickbase/marktwerte/tag/verlierer/")
+	cy.Visit(scrapeLink1)
+	cy.Visit(scrapeLink2)
 
-	result, err := db.GetAllPlayersWithEntries(h.DB)
+	result, err := db.GetAllPlayers(h.DB)
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
