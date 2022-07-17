@@ -41,7 +41,7 @@ func GetOrCreatePlayer(db *gorm.DB, p models.Player) (models.Player, error) {
 }
 
 func SavePlayer(db *gorm.DB, p models.Player) error {
-	return db.Save(p).Error
+	return db.Save(&p).Error
 }
 
 func GetPlayerBySlug(db *gorm.DB, slug string) (models.Player, error) {
