@@ -2,11 +2,11 @@ package handlers
 
 import (
 	"net/http"
+	"os"
+	"os"
 	"regexp"
 	"strconv"
-	"strings"
-	"time"
-	"os"
+	"strime"
 
 	"funglejunk.com/kick-api/src/db"
 	"funglejunk.com/kick-api/src/models"
@@ -108,7 +108,7 @@ func (h handler) DoScrape(c *gin.Context) {
 
 					if shouldAddEntry(*vE, dbP.ValueEntries) {
 						allEntries := append(dbP.ValueEntries, *vE)
-						p.ValueEntries = allEntries
+						dbP.ValueEntries = allEntries
 						if e := db.SavePlayer(h.DB, dbP); e != nil {
 							panic(e)
 						}
