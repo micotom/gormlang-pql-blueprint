@@ -5,7 +5,7 @@ services:
     container_name: kick-api
     build:
       context: .
-      target: dev
+      target: prod
     environment:
       - DB_HOST=$DB_HOST
       - POSTGRES_USER=$POSTGRES_USER

@@ -30,7 +30,25 @@ COPY ./app/ /app/
 RUN go mod download \
     && go mod verify
 
-RUN go build -a -o .
+WORKDIR /app/src
+RUN go build -o kick-api -a .
 
-# prod: todo
+# prod
+FROM alpine:latest AS prod
 
+ENV GIN_MODE=release
+
+RUN apk update \
+    && apk add --no-cache \
+    ca-certificates \
+    curl \
+    tzdata \
+    && update-ca-certificates
+
+# Copy executable
+COPY --from=builder /app/src/kick-api /usr/local/bin/kick-api
+COPY --from=builder /app/src/tmpl /tmpl
+COPY --from=builder /app/src/assets /assets
+EXPOSE 8080
+
+ENTRYPOINT ["/usr/local/bin/kick-api"]

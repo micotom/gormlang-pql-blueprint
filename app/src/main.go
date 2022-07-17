@@ -25,6 +25,8 @@ func main() {
 	DB := db.Init()
 	h := handlers.New(DB)
 
+	// time.Sleep(60 * time.Second)
+
 	r := gin.Default()
 	r.SetFuncMap(template.FuncMap{
 		"dateStr":                    dateStr,
@@ -36,8 +38,9 @@ func main() {
 		"playerCurrentRaiseDiff":     models.PlayerGetCurrentRaiseDiff,
 		"playerCurrentRaiseDiffPerc": models.PlayerGetCurrentRaisePerc,
 	})
+
 	r.Static("/assets", "./assets")
-	r.LoadHTMLGlob("tmpl/*.html")
+	r.LoadHTMLGlob("./tmpl/*.html")
 
 	r.GET("/scrape", h.DoScrape)
 	r.GET("/overview", h.GetOverview)
