@@ -20,7 +20,7 @@ func (h handler) AddPlayerToTeam(c *gin.Context) {
 			p, e := db.GetPlayerBySlug(h.DB, body.PlayerSlug)
 			if _, e := CheckResult(c, p, e); e == nil {
 				t.Players = append(t.Players, p)
-				if e := h.DB.Save(t).Error; e == nil {
+				if e := h.DB.Save(&t).Error; e == nil {
 					c.Status(http.StatusCreated)
 				} else {
 					c.AbortWithStatus(http.StatusInternalServerError)

@@ -51,7 +51,7 @@ func main() {
 	r.GET("/players/turnarounds", h.GetPlayersWithTurnoarounds)
 
 	r.GET("/teams/:slug", h.GetTeam)
-	r.POST("/teams/:slug", h.CreateTeam)
+	r.POST("/teams", h.CreateTeam)
 	r.POST("/teams/:slug/player", h.AddPlayerToTeam)
 
 	r.Run() // listen and serve on 0.0.0.0:8080
