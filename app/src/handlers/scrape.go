@@ -3,10 +3,10 @@ package handlers
 import (
 	"net/http"
 	"os"
-	"os"
 	"regexp"
 	"strconv"
-	"strime"
+	"strings"
+	"time"
 
 	"funglejunk.com/kick-api/src/db"
 	"funglejunk.com/kick-api/src/models"
