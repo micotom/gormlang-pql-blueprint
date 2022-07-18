@@ -27,7 +27,8 @@ func (h handler) GetPlayersWithTurnoarounds(c *gin.Context) {
 				}
 			}
 		}
-		c.JSON(http.StatusOK, turnarounds)
+		c.HTML(http.StatusOK, "turnarounds.html", turnarounds)
+		//c.JSON(http.StatusOK, turnarounds)
 	}
 
 }

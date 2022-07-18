@@ -1,0 +1,26 @@
+<html class="has-navbar-fixed-top">
+    {{ template "navbar.html" .}}
+    <table class="table is-striped is-narrow">
+        <tr>
+            <th>Name</th>
+            <th>Position</th>
+            <th>Value</th>
+            <th>Diff</th>
+            <th>Diff Perc</th>
+            <th>Trend</th>
+        </tr>
+        {{ range . }}
+            <tr>
+                <td>
+                    <a href="../../players/{{ .Slug }}">{{ .Name }}</a>
+                </td>
+                <td>{{ .Position }}</td>
+                <td>{{ . | playerCurrentValue | moneyStr }}€</td>
+                <td>{{ . | playerCurrentRaiseDiff | moneyStr }}€</td>
+                <td>{{ . | playerCurrentRaiseDiffPerc }}%</td>
+                <td>{{ . | trend }}</td>
+
+            </tr>
+        {{ end }}
+    </table>
+</html>

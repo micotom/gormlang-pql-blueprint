@@ -1,15 +1,31 @@
-<head>
-    <link rel="stylesheet" type="text/css" href="/assets/bulma.min.css">
-</head>
-<div class="box">
-    {{ range $key, $value := . }}
-        <p class="subtitle">{{ $key }}</p>
-        <div class="content">
-        {{ range $value }}
-            <div class="list is-hoverable">
-                <a class="list-item" href="../players/{{ .Slug }}">{{ .Name }}</a>
+<html class="has-navbar-fixed-top">
+    {{ template "navbar.html" .}}
+    <head>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+            let cardToggles = document.getElementsByClassName('card-toggle');
+            for (let i = 0; i < cardToggles.length; i++) {
+              cardToggles[i].addEventListener('click', e => {
+                e.currentTarget.parentElement.parentElement.childNodes[3].classList.toggle('is-hidden');
+              });
+            }
+          });
+          </script>
+    </head>
+    <div class="box">
+        {{ range $key, $value := . }}
+            <div class="card">
+                <header class="card-header">
+                    <a class="card-header-title card-toggle">{{ $key }}</a>
+                </header>
+                <div class="card-content is-hidden">
+                {{ range $value }}
+                    <div class="is-hoverable">
+                        <a class="list-item" href="/players/{{ .Slug }}">{{ .Name }}</a>
+                    </div>
+                {{ end }}
+                </div>
             </div>
         {{ end }}
-        </div>
-    {{ end }}
-</div>
+    </div>
+</html>

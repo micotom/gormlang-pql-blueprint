@@ -34,10 +34,17 @@ func Init() *gorm.DB {
 }
 
 func GetOrCreatePlayer(db *gorm.DB, p models.Player) (models.Player, error) {
-	err := db.FirstOrCreate(&p).Preload("ValueEntries", func(db *gorm.DB) *gorm.DB {
-		return db.Order("value_entries.Day ASC")
-	}).Error
-	return p, err
+	if err := db.FirstOrCreate(&p).Error; err == nil {
+		var ve []models.ValueEntry
+		if err := db.Where("player_slug = ?", p.Slug).Find(&ve).Error; err == nil {
+			p.ValueEntries = ve
+			return p, err
+		} else {
+			return p, err
+		}
+	} else {
+		return p, err
+	}
 }
 
 func SavePlayer(db *gorm.DB, p models.Player) error {

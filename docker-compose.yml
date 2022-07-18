@@ -5,7 +5,7 @@ services:
     container_name: kick-api
     build:
       context: .
-      target: prod
+      target: dev
     environment:
       - DB_HOST=$DB_HOST
       - POSTGRES_USER=$POSTGRES_USER
@@ -24,6 +24,7 @@ services:
   postgres-db:
     image: postgres:latest
     hostname: $DB_HOST
+    container_name: $DB_HOST
     restart: always
     environment:
       - POSTGRES_USER=$POSTGRES_USER
