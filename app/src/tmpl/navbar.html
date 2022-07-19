@@ -3,30 +3,22 @@
     <script>
       document.addEventListener('DOMContentLoaded', () => {
 
-      // Get all "navbar-burger" elements
-      const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
-      const $navbarMenus = Array.prototype.slice.call(document.querySelectorAll('.navbar-menu'), 0);
+        var burger = document.querySelector('.navbar-burger');
+        var menu = document.querySelector('#' + burger.dataset.target);
 
-      // Add a click event on each of them
-      $navbarBurgers.forEach( el => {
-        el.addEventListener('click', () => {
-
-          // Get the target from the "data-target" attribute
-          const target = el.dataset.target;
-          const $target = document.getElementById(target);
-
-          // Toggle the "is-active" class on both the "navbar-burger" and the "navbar-menu"
-          el.classList.toggle('is-active');
-
-          $navbarMenus.forEach( m => {
-            m.classList.toggle('is-active');
-          });
+        burger.addEventListener('click', function() {
+          burger.classList.toggle('is-active');
+          menu.classList.toggle('is-active');
         });
       });
-
-      });
     </script>
+    <style>
+      .navbar-burger {
+        margin-left: 0;
+      }
+    </style>
 </head>
+
 <nav class="navbar is-light is-fixed-top is-info" role="navigation" aria-label="main navigation">
   <div class="navbar-brand">
     <a role="button" class="navbar-burger" data-target="navMenu" aria-label="menu" aria-expanded="false">
@@ -35,7 +27,7 @@
       <span aria-hidden="true"></span>
     </a>
   </div>
-  <div class="navbar-menu">
+  <div class="navbar-menu" id="navMenu">
     <div class="navbar-start">
       <a class="navbar-item" href="/overview">Home</a>
       <a class="navbar-item" href="/teams/t1">Team</a>
