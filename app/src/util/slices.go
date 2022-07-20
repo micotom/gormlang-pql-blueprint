@@ -5,6 +5,14 @@ import (
 	"math/rand"
 )
 
+func SumByInt[K any](ks []K, sum func(k K) int) int {
+	var s = 0
+	for _, k := range ks {
+		s += sum(k)
+	}
+	return s
+}
+
 func FindBy[K any](ks []K, fn func(k K) bool) (*K, error) {
 	for _, k := range ks {
 		if fn(k) {

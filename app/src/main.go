@@ -49,6 +49,7 @@ func main() {
 	r.GET("/players/:slug", h.GetPlayer)
 	r.GET("/players/compare", h.ComparePlayers)
 	r.GET("/players/turnarounds", h.GetPlayersWithTurnoarounds)
+	r.GET("/players/top", h.GetTopPlayersX)
 
 	r.GET("/teams/:slug", h.GetTeam)
 	r.POST("/teams", h.CreateTeam)
