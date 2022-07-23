@@ -30,8 +30,9 @@
                 </tr>
                 {{ range .Players }}
                     <tr>
-                        <td>                    <a href="../../players/{{ .Slug }}">
-                            {{ .Name }}</a></td>
+                        <td>
+                            <a href="../../players/{{ .Slug }}">{{ .Name }}</a>
+                        </td>
                         <td>{{ .Position }}</td>
                         <td>{{ . | playerCurrentValue | moneyStr }}€</td>
                         <td>{{ . | playerCurrentRaiseDiff | moneyStr }}€</td>

@@ -69,27 +69,41 @@ func GetAllPlayers(db *gorm.DB) ([]models.Player, error) {
 
 func AddPlayerToTeam(db *gorm.DB, t *models.Team, slug string) error {
 	if p, e := GetPlayerBySlug(db, slug); e == nil {
-		t.Players = append(t.Players, p)
-		db.Save(t)
+		var duplicate = false
+		for _, tp := range t.Players {
+			if tp.Slug == slug {
+				duplicate = true
+			}
+		}
+		if !duplicate {
+			t.Players = append(t.Players, p)
+			db.Save(t)
+		}
 		return nil
 	} else {
 		return e
 	}
 }
 
-func DeletePlayerFromTeam(db *gorm.DB, t *models.Team, slug string) error {
-	var pos = -1
-	for i, p2 := range t.Players {
-		if p2.Slug == slug {
-			pos = i
-			break
+func DeletePlayerFromTeam(db *gorm.DB, teamSlug string, slug string) error {
+	var t models.Team
+	db.Where("slug = ?", teamSlug).Preload("Players").First(&t)
+
+	var playerPos = -1
+	for i, p := range t.Players {
+		if p.Slug == slug {
+			playerPos = i
 		}
 	}
-	if pos != -1 {
-		t.Players = append(t.Players[:pos], t.Players[pos+1:]...)
-		return db.Save(t).Error
+
+	if playerPos == -1 {
+		return errors.New("Player not found")
+	} else {
+		t.Players = append(t.Players[:playerPos], t.Players[playerPos+1:]...)
 	}
-	return errors.New("No such player")
+
+	db.Model(&t).Association("Players").Replace(t.Players)
+	return nil
 }
 
 func GetTeam(db *gorm.DB, slug string) (models.Team, error) {
