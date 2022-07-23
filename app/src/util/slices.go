@@ -5,6 +5,29 @@ import (
 	"math/rand"
 )
 
+func Map[K any, T any](ks []K, m func(k K) T) []T {
+	s := []T{}
+	for _, k := range ks {
+		s = append(s, m(k))
+	}
+	return s
+}
+
+func GroupBy[K any, T comparable](ks []K, fn func(k K) T) map[T][]K {
+	m := make(map[T][]K)
+	for _, k := range ks {
+		t := fn(k)
+		if val, present := m[t]; present {
+			val = append(val, k)
+			m[t] = val
+		} else {
+			m[t] = []K{}
+			m[t] = append(m[t], k)
+		}
+	}
+	return m
+}
+
 func SumByInt[K any](ks []K, sum func(k K) int) int {
 	var s = 0
 	for _, k := range ks {

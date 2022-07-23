@@ -1,0 +1,86 @@
+<html class="has-navbar-fixed-top">
+    {{ template "navbar.html" .}}
+    <head>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+            let cardToggles = document.getElementsByClassName('card-toggle');
+            for (let i = 0; i < cardToggles.length; i++) {
+              cardToggles[i].addEventListener('click', e => {
+                e.currentTarget.parentElement.parentElement.childNodes[3].classList.toggle('is-hidden');
+              });
+            }
+          });
+          </script>
+    </head>
+    <div class="box">
+        
+        <div class="card">
+            <header class="card-header">
+                <a class="card-header-title card-toggle">Torhüter</a>
+            </header>
+            <div class="card-content is-hidden">
+            {{ range .Keepers }}
+                <div class="content">
+                    <div class="is-hoverable">
+                        <a class="list-item" href="/players/{{ .Slug }}">{{ .Name }}</a>
+                    </div>
+                    <div>{{ .Value | moneyStr}}€</div>
+                    <div>{{ .Club }}</div>
+                </div>
+            {{ end }}
+            </div>
+        </div>
+
+        <div class="card">
+            <header class="card-header">
+                <a class="card-header-title card-toggle">Abwehrspieler</a>
+            </header>
+            <div class="card-content is-hidden">
+                {{ range .Defenders }}
+                    <div class="content">
+                        <div class="is-hoverable">
+                            <a class="list-item" href="/players/{{ .Slug }}">{{ .Name }}</a>
+                        </div>
+                        <div>{{ .Value | moneyStr}}€</div>
+                        <div>{{ .Club }}</div>
+                    </div>
+                {{ end }}
+            </div>
+        </div>
+
+        <div class="card">
+            <header class="card-header">
+                <a class="card-header-title card-toggle">Mittelfeldspieler</a>
+            </header>
+            <div class="card-content is-hidden">
+                {{ range .Midfielder }}
+                    <div class="content">
+                        <div class="is-hoverable">
+                            <a class="list-item" href="/players/{{ .Slug }}">{{ .Name }}</a>
+                        </div>
+                        <div>{{ .Value | moneyStr}}€</div>
+                        <div>{{ .Club }}</div>
+                    </div>
+                {{ end }}
+            </div>
+        </div>
+
+        <div class="card">
+            <header class="card-header">
+                <a class="card-header-title card-toggle">Stürmer</a>
+            </header>
+            <div class="card-content is-hidden">
+                {{ range .Attackers }}
+                    <div class="content">
+                        <div class="is-hoverable">
+                            <a class="list-item" href="/players/{{ .Slug }}">{{ .Name }}</a>
+                        </div>
+                        <div>{{ .Value | moneyStr}}€</div>
+                        <div>{{ .Club }}</div>
+                    </div>
+                {{ end }}
+            </div>
+        </div>
+
+    </div>
+</html>
