@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"fmt"
-	"net/http"
 	"os"
 	"regexp"
 	"strconv"
@@ -11,7 +10,6 @@ import (
 
 	"funglejunk.com/kick-api/src/db"
 	"funglejunk.com/kick-api/src/models"
-	"github.com/gin-gonic/gin"
 	"github.com/gocolly/colly"
 	"github.com/gosimple/slug"
 	"gorm.io/datatypes"
@@ -67,7 +65,7 @@ func shouldAddEntry(new models.ValueEntry, olds []models.ValueEntry) bool {
 	return true
 }
 
-func (h handler) DoScrape(c *gin.Context) {
+func (h handler) DoScrape() {
 	cy := colly.NewCollector()
 
 	cy.Limit(&colly.LimitRule{
@@ -125,11 +123,4 @@ func (h handler) DoScrape(c *gin.Context) {
 	cy.Visit(scrapeLink1)
 	cy.Visit(scrapeLink2)
 
-	result, err := db.GetAllPlayers(h.DB)
-
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
-	} else {
-		c.JSON(http.StatusOK, result)
-	}
 }

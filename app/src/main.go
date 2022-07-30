@@ -10,6 +10,7 @@ import (
 	"funglejunk.com/kick-api/src/handlers"
 	"funglejunk.com/kick-api/src/models"
 	"github.com/gin-gonic/gin"
+	"github.com/robfig/cron/v3"
 	log "github.com/sirupsen/logrus"
 	"golang.org/x/text/language"
 	"golang.org/x/text/message"
@@ -23,9 +24,13 @@ func init() {
 
 func main() {
 	DB := db.Init()
+
 	h := handlers.New(DB)
 
-	// time.Sleep(60 * time.Second)
+	c := cron.New()
+	c.AddFunc("0 8 * * *", func() {
+		h.DoScrape()
+	})
 
 	r := gin.Default()
 	r.SetFuncMap(template.FuncMap{
@@ -42,7 +47,6 @@ func main() {
 	r.Static("/assets", "./assets")
 	r.LoadHTMLGlob("./tmpl/*.html")
 
-	r.GET("/scrape", h.DoScrape)
 	r.GET("/overview", h.GetOverview)
 
 	r.GET("/players", h.GetAllPlayers)
