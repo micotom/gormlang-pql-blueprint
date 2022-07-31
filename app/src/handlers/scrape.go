@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"fmt"
+	"net/http"
 	"os"
 	"regexp"
 	"strconv"
@@ -10,6 +11,7 @@ import (
 
 	"funglejunk.com/kick-api/src/db"
 	"funglejunk.com/kick-api/src/models"
+	"github.com/gin-gonic/gin"
 	"github.com/gocolly/colly"
 	"github.com/gosimple/slug"
 	"gorm.io/datatypes"
@@ -63,6 +65,11 @@ func shouldAddEntry(new models.ValueEntry, olds []models.ValueEntry) bool {
 		}
 	}
 	return true
+}
+
+func (h handler) DoScrapeRemote(c *gin.Context) {
+	h.DoScrape()
+	c.Status(http.StatusOK)
 }
 
 func (h handler) DoScrape() {

@@ -31,6 +31,7 @@ func main() {
 	c.AddFunc("0 8 * * *", func() {
 		h.DoScrape()
 	})
+	c.Start()
 
 	r := gin.Default()
 	r.SetFuncMap(template.FuncMap{
@@ -46,6 +47,8 @@ func main() {
 
 	r.Static("/assets", "./assets")
 	r.LoadHTMLGlob("./tmpl/*.html")
+
+	r.GET("/scape", h.DoScrapeRemote)
 
 	r.GET("/overview", h.GetOverview)
 
