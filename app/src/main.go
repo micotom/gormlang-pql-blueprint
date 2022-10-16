@@ -37,18 +37,20 @@ func main() {
 	r.SetFuncMap(template.FuncMap{
 		"dateStr":                    dateStr,
 		"moneyStr":                   moneyStr,
+		"moneyStrFl":                 moneyStrFl,
 		"trend":                      models.PlayerValueTrend,
 		"teamValue":                  models.TeamCurrentValue,
 		"teamRaise":                  models.TeamTotalRaise,
 		"playerCurrentValue":         models.PlayerGetCurrentValue,
 		"playerCurrentRaiseDiff":     models.PlayerGetCurrentRaiseDiff,
 		"playerCurrentRaiseDiffPerc": models.PlayerGetCurrentRaisePerc,
+		"pricePerPoints":             models.GetPlayerPointsPerPrice,
 	})
 
 	r.Static("/assets", "./assets")
 	r.LoadHTMLGlob("./tmpl/*.html")
 
-	r.GET("/scape", h.DoScrapeRemote)
+	r.GET("/scrape", h.DoScrapeRemote)
 
 	r.GET("/overview", h.GetOverview)
 
@@ -76,4 +78,9 @@ func dateStr(date datatypes.Date) string {
 func moneyStr(i int) string {
 	p := message.NewPrinter(language.German)
 	return p.Sprintf("%d", i)
+}
+
+func moneyStrFl(f float32) string {
+	p := message.NewPrinter(language.German)
+	return p.Sprintf("%.2f", f)
 }

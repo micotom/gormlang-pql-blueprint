@@ -22,6 +22,10 @@
                     <th>Trend</th>
                     <td>{{ . | trend }}</td>
                 </tr>
+                <tr>
+                    <th>Price / Points</th>
+                    <td>{{ . | pricePerPoints | moneyStrFl }}€</td>
+                </tr>
             </table>
         </p>
     

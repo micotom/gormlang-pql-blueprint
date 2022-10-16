@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"fmt"
 	"net/http"
 	"os"
 	"regexp"
@@ -55,11 +54,9 @@ func parsePoints(str string) int {
 
 func shouldAddEntry(new models.ValueEntry, olds []models.ValueEntry) bool {
 	nY, nM, nD := time.Time(new.Day).Date()
-	fmt.Println(fmt.Sprintf("check: %d, %d, %d", nY, int(nM), nD))
 	for _, entry := range olds {
 		y, m, d := time.Time(entry.Day).Date()
 		isDuplicate := y == nY && m == nM && d == nD
-		fmt.Println(fmt.Sprintf("\tagainst: %d, %d, %d", y, int(m), d))
 		if isDuplicate {
 			return false
 		}
@@ -121,6 +118,21 @@ func (h handler) DoScrape() {
 							panic(e)
 						}
 					} else {
+						// only update
+						needsUpdate := false
+						if dbP.Club != p.Club {
+							dbP.Club = p.Club
+							needsUpdate = true
+						}
+						if dbP.TotalPoints != p.TotalPoints {
+							dbP.TotalPoints = p.TotalPoints
+							needsUpdate = true
+						}
+						if needsUpdate {
+							if e := db.SavePlayer(h.DB, dbP); e != nil {
+								panic(e)
+							}
+						}
 						log.Info("Duplicate")
 					}
 				})

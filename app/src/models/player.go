@@ -14,6 +14,15 @@ type Player struct {
 	ValueEntries []ValueEntry
 }
 
+func GetPlayerPointsPerPrice(p Player) float32 {
+	v := PlayerGetCurrentValue(p)
+	ps := p.TotalPoints
+	if ps == 0 {
+		return -1
+	}
+	return float32(v) / float32(ps)
+}
+
 func PlayerGetCurrentRaisePerc(p Player) float32 {
 	y, m, d := time.Now().Date()
 	if v, e := PlayerGetValueAt(p, y, m, d); e == nil {
