@@ -1,0 +1,24 @@
+<html class="has-navbar-fixed-top">
+    {{ template "navbar.html" .}}
+    <div class="box">
+        <h1 class="title">Best Price/Value</h1>
+        <table class="table is-striped is-narrow">
+            <tr>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Price / Point</th>
+                <th>Total Points</th>
+            </tr>
+            {{ range .PlayerPriceValues }}
+            <tr>
+                <td>
+                    <a href="../../players/{{ .PlayerSlug }}">{{ .PlayerName }}</a>
+                </td>
+                <td>{{ .Price | moneyStr }}€</td>
+                <td>{{ .PricePerPoints | moneyStrFl }}€</td>
+                <td>{{ .TotalPoints }}</td>
+            </tr>
+            {{ end }}
+        </table>
+    </div>
+</html>

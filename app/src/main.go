@@ -60,6 +60,7 @@ func main() {
 	r.GET("/players/turnarounds", h.GetPlayersWithTurnoarounds)
 	r.GET("/players/top", h.GetTopPlayersX)
 	r.GET("/players/positions", h.GetPlayersByPosition)
+	r.GET("/players/pricevalues", h.GetPriceValue)
 
 	r.GET("/teams/:slug", h.GetTeam)
 	r.POST("/teams", h.CreateTeam)
