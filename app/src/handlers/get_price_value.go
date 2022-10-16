@@ -8,6 +8,7 @@ import (
 	"funglejunk.com/kick-api/src/models"
 	"funglejunk.com/kick-api/src/util"
 	"github.com/gin-gonic/gin"
+	log "github.com/sirupsen/logrus"
 )
 
 type PlayerValue struct {
@@ -16,6 +17,7 @@ type PlayerValue struct {
 	TotalPoints    int
 	Price          int
 	PricePerPoints float32
+	PointRank      int
 }
 
 type PriceValueResponse struct {
@@ -53,13 +55,29 @@ func (h handler) GetPriceValue(c *gin.Context) {
 			TotalPoints:    p.TotalPoints,
 		})
 	}
-	playersByPrice := util.SortBy2(pvs, func(pv PlayerValue) int {
-		return pv.Price
+	playersByTotalPoints := util.SortBy2(pvs, func(pv PlayerValue) int {
+		return pv.TotalPoints
 	})
+	util.Reverse(playersByTotalPoints)
+
 	playersByPriceValue := util.SortBy2(pvs, func(pv PlayerValue) float32 {
 		return pv.PricePerPoints
 	})
+
+	for i1, _ := range playersByPriceValue {
+		p := &playersByPriceValue[i1]
+		p.PointRank = -1
+		for i, p2 := range playersByTotalPoints {
+			if p.PlayerSlug == p2.PlayerSlug {
+				log.Info(p.PlayerName, " is on pos ", i)
+				p.PointRank = i + 1
+				log.Info("\tset to: ", p.PointRank)
+				break
+			}
+		}
+	}
+
 	c.HTML(http.StatusOK, "pricevalues.html", PriceValueResponse{
-		PlayerPrices: playersByPrice, PlayerPriceValues: playersByPriceValue,
+		PlayerPrices: playersByTotalPoints, PlayerPriceValues: playersByPriceValue,
 	})
 }

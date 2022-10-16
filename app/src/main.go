@@ -38,6 +38,7 @@ func main() {
 		"dateStr":                    dateStr,
 		"moneyStr":                   moneyStr,
 		"moneyStrFl":                 moneyStrFl,
+		"addOne":                     addOne,
 		"trend":                      models.PlayerValueTrend,
 		"teamValue":                  models.TeamCurrentValue,
 		"teamRaise":                  models.TeamTotalRaise,
@@ -84,4 +85,8 @@ func moneyStr(i int) string {
 func moneyStrFl(f float32) string {
 	p := message.NewPrinter(language.German)
 	return p.Sprintf("%.2f", f)
+}
+
+func addOne(i int) int {
+	return i + 1
 }

@@ -4,19 +4,23 @@
         <h1 class="title">Best Price/Value</h1>
         <table class="table is-striped is-narrow">
             <tr>
+                <th></th>
                 <th>Name</th>
                 <th>Price</th>
                 <th>Price / Point</th>
                 <th>Total Points</th>
+                <th>Point Rank</th>
             </tr>
-            {{ range .PlayerPriceValues }}
+            {{ range $i, $p := .PlayerPriceValues }}
             <tr>
+                <td>{{$i | addOne }}</td>
                 <td>
-                    <a href="../../players/{{ .PlayerSlug }}">{{ .PlayerName }}</a>
+                    <a href="../../players/{{ .PlayerSlug }}">{{ $p.PlayerName }}</a>
                 </td>
-                <td>{{ .Price | moneyStr }}€</td>
-                <td>{{ .PricePerPoints | moneyStrFl }}€</td>
-                <td>{{ .TotalPoints }}</td>
+                <td>{{ $p.Price | moneyStr }}€</td>
+                <td>{{ $p.PricePerPoints | moneyStrFl }}€</td>
+                <td>{{ $p.TotalPoints }}</td>
+                <td>{{ $p.PointRank }}</td>
             </tr>
             {{ end }}
         </table>
