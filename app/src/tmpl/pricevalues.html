@@ -10,8 +10,9 @@
                 <th>Price / Point</th>
                 <th>Total Points</th>
                 <th>Point Rank</th>
+                <th>Coeff</th>
             </tr>
-            {{ range $i, $p := .PlayerPriceValues }}
+            {{ range $i, $p := .PlayerCoeffs }}
             <tr>
                 <td>{{$i | addOne }}</td>
                 <td>
@@ -21,6 +22,7 @@
                 <td>{{ $p.PricePerPoints | moneyStrFl }}€</td>
                 <td>{{ $p.TotalPoints }}</td>
                 <td>{{ $p.PointRank }}</td>
+                <td>{{ $p.Coeff }}</td>
             </tr>
             {{ end }}
         </table>
