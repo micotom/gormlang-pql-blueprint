@@ -6,9 +6,10 @@ require (
 	github.com/gin-gonic/gin v1.8.1
 	github.com/gocolly/colly v1.2.0
 	github.com/gosimple/slug v1.12.0
+	github.com/micotom/gfuncs v0.0.2
 	github.com/robfig/cron/v3 v3.0.0
 	github.com/sirupsen/logrus v1.8.1
-	golang.org/x/exp v0.0.0-20221012211006-4de253d81b95
+	golang.org/x/exp v0.0.0-20221019170559-20944726eadf
 	golang.org/x/text v0.3.7
 	gorm.io/datatypes v1.0.7
 	gorm.io/driver/postgres v1.3.8
