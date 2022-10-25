@@ -7,6 +7,7 @@ import (
 	"funglejunk.com/kick-api/src/models"
 	"funglejunk.com/kick-api/src/util"
 	"github.com/gin-gonic/gin"
+	"github.com/micotom/gfuncs"
 )
 
 type PositonsResult struct {
@@ -31,8 +32,8 @@ func (h handler) GetPlayersByPosition(c *gin.Context) {
 			return p.Position
 		})
 		for key, posSlice := range allByPosition {
-			posByValue := util.SortBy(posSlice, func(p1 models.Player, p2 models.Player) bool {
-				return p1.ValueEntries[len(p1.ValueEntries)-1].Value > p2.ValueEntries[len(p2.ValueEntries)-1].Value
+			posByValue := gfuncs.SortBy(posSlice, func(p models.Player) int {
+				return p.ValueEntries[len(p.ValueEntries)-1].Value
 			})
 			allByPosition[key] = posByValue
 		}

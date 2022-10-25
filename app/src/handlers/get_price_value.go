@@ -8,6 +8,8 @@ import (
 	"funglejunk.com/kick-api/src/models"
 	"funglejunk.com/kick-api/src/util"
 	"github.com/gin-gonic/gin"
+	"github.com/micotom/gfuncs"
+	log "github.com/sirupsen/logrus"
 )
 
 type PlayerValue struct {
@@ -26,6 +28,15 @@ type PriceValueResponse struct {
 	PlayerCoeffs      []PlayerValue
 }
 
+func indexOf(slice []PlayerValue, p PlayerValue) int {
+	for i, p2 := range slice {
+		if p.PlayerSlug == p2.PlayerSlug {
+			return i
+		}
+	}
+	return -1
+}
+
 func (h handler) GetPriceValue(c *gin.Context) {
 	allPlayers, err := db.GetAllPlayers(h.DB)
 	if err != nil {
@@ -35,11 +46,6 @@ func (h handler) GetPriceValue(c *gin.Context) {
 	pvs := make([]PlayerValue, 0, len(allPlayers))
 
 	for _, p := range allPlayers {
-		// not invalid
-		pricePerPoint := models.GetPlayerPointsPerPrice(p)
-		if pricePerPoint == -1 || pricePerPoint < 0 {
-			continue
-		}
 		// skip if older than 2 days
 		lastEntry := p.ValueEntries[len(p.ValueEntries)-1]
 		now := time.Now()
@@ -57,7 +63,7 @@ func (h handler) GetPriceValue(c *gin.Context) {
 		})
 	}
 
-	playersByTotalPoints := util.SortBy2(pvs, func(pv PlayerValue) int {
+	playersByTotalPoints := gfuncs.SortBy(pvs, func(pv PlayerValue) int {
 		return pv.TotalPoints
 	})
 	util.Reverse(playersByTotalPoints)
@@ -66,23 +72,24 @@ func (h handler) GetPriceValue(c *gin.Context) {
 		return pv.PricePerPoints
 	})
 
-	for i1, _ := range playersByPriceValue {
-		p := &playersByPriceValue[i1]
-		p.PointRank = -1
-		for i, p2 := range playersByTotalPoints {
-			if p.PlayerSlug == p2.PlayerSlug {
-				p.PointRank = i + 1
-				break
-			}
-		}
-		p.Coeff = float32(i1) + 1.75*float32(p.PointRank)
+	log.Info("best points: ", playersByTotalPoints[0].PlayerName)
+
+	maxLen := 200
+	coeffPlayers := make([]PlayerValue, maxLen)
+
+	for i := 0; i < len(playersByTotalPoints) && i < 200; i++ {
+		priceValueIndex := indexOf(playersByPriceValue, playersByTotalPoints[i])
+		p := &playersByPriceValue[priceValueIndex]
+		p.PointRank = i + 1
+		p.Coeff = float32(priceValueIndex) + 2.*float32(p.PointRank)
+		coeffPlayers[i] = *p
 	}
 
-	playersByCoeff := util.SortBy2(playersByPriceValue, func(pv PlayerValue) float32 {
+	coeffPlayers = util.SortBy2(coeffPlayers, func(pv PlayerValue) float32 {
 		return pv.Coeff
 	})
 
 	c.HTML(http.StatusOK, "pricevalues.html", PriceValueResponse{
-		PlayerPrices: playersByTotalPoints, PlayerPriceValues: playersByPriceValue, PlayerCoeffs: playersByCoeff,
+		PlayerPrices: playersByTotalPoints, PlayerPriceValues: playersByPriceValue, PlayerCoeffs: coeffPlayers,
 	})
 }

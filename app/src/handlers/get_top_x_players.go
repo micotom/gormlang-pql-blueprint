@@ -9,6 +9,7 @@ import (
 	"funglejunk.com/kick-api/src/models"
 	"funglejunk.com/kick-api/src/util"
 	"github.com/gin-gonic/gin"
+	"github.com/micotom/gfuncs"
 )
 
 type ShortDate struct {
@@ -41,20 +42,14 @@ func (h handler) GetTopPlayersX(c *gin.Context) {
 					day: lD, month: lM, year: lY,
 				}
 
-				sort := util.SortBy(ps, func(l models.Player, r models.Player) bool {
-					lSum := util.SumByInt(l.ValueEntries, func(ve models.ValueEntry) int {
+				sort := gfuncs.SortBy(ps, func(p models.Player) int {
+					lSum := util.SumByInt(p.ValueEntries, func(ve models.ValueEntry) int {
 						if isInDateRange(shortDateFromTime(time.Time(ve.Day)), first, last) {
 							return ve.RaiseDiff
 						}
 						return 0
 					})
-					rSum := util.SumByInt(r.ValueEntries, func(ve models.ValueEntry) int {
-						if isInDateRange(shortDateFromTime(time.Time(ve.Day)), first, last) {
-							return ve.RaiseDiff
-						}
-						return 0
-					})
-					return lSum > rSum
+					return lSum
 				})
 
 				r := []TopResultX{}

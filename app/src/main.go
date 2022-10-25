@@ -36,6 +36,7 @@ func main() {
 	r := gin.Default()
 	r.SetFuncMap(template.FuncMap{
 		"dateStr":                    dateStr,
+		"latestUpdate":               getLatestUpdate,
 		"moneyStr":                   moneyStr,
 		"moneyStrFl":                 moneyStrFl,
 		"addOne":                     addOne,
@@ -89,4 +90,8 @@ func moneyStrFl(f float32) string {
 
 func addOne(i int) int {
 	return i + 1
+}
+
+func getLatestUpdate(p models.Player) string {
+	return dateStr(p.ValueEntries[len(p.ValueEntries)-1].Day)
 }

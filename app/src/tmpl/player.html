@@ -4,6 +4,7 @@
         <h1 class="title">{{ .Name }}</h1>
         <p>
             <h2 class="subtitle">Facts</h2>
+            <h6 class="subtitle is-6">Latest Update: {{ . | latestUpdate }}</h6>
     
             <table class="table">
                 <tr>
